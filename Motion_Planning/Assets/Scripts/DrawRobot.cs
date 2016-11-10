@@ -4,16 +4,16 @@ using System.Collections.Generic;
 using System.IO;
 using System;
 
-public class DrawObstacle : MonoBehaviour {
-	List<Obstacle> obstacles = new List<Obstacle>(); //用來儲存障礙物
+public class DrawRobot : MonoBehaviour {
+	List<Robot> robots = new List<Robot>(); //用來儲存障礙物
 
 	// Use this for initialization
 	void Start () {
 
-		int n_of_obstacles = 0;
+		int n_of_robots = 0;
 		int n_of_polygons = 0;
 		//======  存讀檔   =======================================================
-		string path = Application.dataPath + "/Resources/obstacle.dat";
+		string path = Application.dataPath + "/Resources/robot.dat";
 		if (!File.Exists(path)){
 			Debug.Log("Error Path: " + path);
 			return;
@@ -37,7 +37,7 @@ public class DrawObstacle : MonoBehaviour {
 		//=======================================================================
 
 		//========    把資料存進結構裡    ===================================
-		n_of_obstacles = Convert.ToInt32( input_string[0] );
+		n_of_robots = Convert.ToInt32( input_string[0] );
 		int line = 1;
 
 		Obstacle temp_o;
@@ -47,7 +47,7 @@ public class DrawObstacle : MonoBehaviour {
 		float temp_y = 0.0F;
 		float temp_z = 0.0F;
 
-		for(int i=0; i<n_of_obstacles; i++)
+		for(int i=0; i<n_of_robots; i++)
 		{
 			temp_o = new Obstacle();
 
@@ -94,7 +94,7 @@ public class DrawObstacle : MonoBehaviour {
 				DrawPolygon (vertices2D, i);
 			}
 		}
-			
+
 		//==========================================================================================
 	}
 
