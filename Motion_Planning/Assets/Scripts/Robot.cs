@@ -7,6 +7,7 @@ public class Robot
 	public List<Polygon> polygons = new List<Polygon>();
 	public Vector3 init_configuration = new Vector3();
 	public Vector3 goal_configuration = new Vector3();
+	public int n_of_control_points;
 	public List<Vector2> control_points = new List<Vector2>();
 
 	public Robot () {

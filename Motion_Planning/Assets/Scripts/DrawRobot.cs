@@ -40,7 +40,7 @@ public class DrawRobot : MonoBehaviour {
 		n_of_robots = Convert.ToInt32( input_string[0] );
 		int line = 1;
 
-		Obstacle temp_o;
+		Robot temp_r;
 		Polygon temp_p;
 
 		float temp_x = 0.0F;
@@ -49,11 +49,11 @@ public class DrawRobot : MonoBehaviour {
 
 		for(int i=0; i<n_of_robots; i++)
 		{
-			temp_o = new Obstacle();
+			temp_r = new Robot();
 
 			//input = sr.ReadLine(); //讀入number of polygons
 			n_of_polygons = Convert.ToInt32( input_string[line++] );
-			temp_o.n_of_polygons = n_of_polygons;
+			temp_r.n_of_polygons = n_of_polygons;
 			for(int j=0; j<n_of_polygons; j++)
 			{
 				//input = sr.ReadLine(); //讀入number of vertices
@@ -69,28 +69,47 @@ public class DrawRobot : MonoBehaviour {
 					temp_p.vertices.Add(v2);
 					line++;
 				}
-				temp_o.polygons.Add(temp_p);
+				temp_r.polygons.Add(temp_p);
 			}
-			string[] temp_Array = input_string[line].Split(' ');
+			string[] temp_Array = input_string[line++].Split(' '); //拆分initial configuration
 			temp_x = Convert.ToSingle( temp_Array[0] );
 			temp_y = Convert.ToSingle( temp_Array[1] );
 			temp_z = Convert.ToSingle( temp_Array[2] );
 			Vector3 v3= new Vector3(temp_x, temp_y, temp_z);
-			temp_o.init_configuration = v3;
+			temp_r.init_configuration = v3;
 
-			obstacles.Add(temp_o);		
-			line++;
+			temp_Array = input_string[line++].Split(' ');  //拆分goal configuration
+			temp_x = Convert.ToSingle( temp_Array[0] );
+			temp_y = Convert.ToSingle( temp_Array[1] );
+			temp_z = Convert.ToSingle( temp_Array[2] );
+			v3= new Vector3(temp_x, temp_y, temp_z);
+			temp_r.goal_configuration = v3;
+
+			temp_r.n_of_control_points = Convert.ToInt32( input_string[line++] ); //儲存control point
+			for(int k=0; k<temp_r.n_of_control_points; k++)
+			{
+				string[] sArray = input_string[line].Split(' ');
+				temp_x = Convert.ToSingle( sArray[0] );
+				temp_y = Convert.ToSingle( sArray[1] );
+				Vector2 v2= new Vector2(temp_x, temp_y);
+
+				temp_r.control_points.Add(v2);
+				line++;
+			}
+
+			robots.Add(temp_r);		
+			//line++;
 		}	
 		//=======================================================================
 
 		//==========  繪圖  =====================================================
 		Vector2[] vertices2D;
 
-		for (int i = 0; i < n_of_obstacles; i++) 
+		for (int i = 0; i < n_of_robots; i++) 
 		{			
-			for (int j = 0; j < obstacles[i].n_of_polygons; j++) 
+			for (int j = 0; j < robots[i].n_of_polygons; j++) 
 			{
-				vertices2D = obstacles[i].polygons[j].vertices.ToArray();
+				vertices2D = robots[i].polygons[j].vertices.ToArray();
 				DrawPolygon (vertices2D, i);
 			}
 		}
@@ -103,7 +122,7 @@ public class DrawRobot : MonoBehaviour {
 
 	}
 
-	public void DrawPolygon(Vector2[] vertices2D, int obstacle_n){
+	public void DrawPolygon(Vector2[] vertices2D, int robot_n){
 		// Use the triangulator to get indices for creating triangles
 		Triangulator tr = new Triangulator(vertices2D);
 		int[] indices = tr.Triangulate();
@@ -122,15 +141,30 @@ public class DrawRobot : MonoBehaviour {
 		msh.RecalculateBounds();
 
 
-		GameObject obj = new GameObject ("Obstacle");
+		//====  畫initial robot ============
+		GameObject obj = new GameObject ("Robot");
 		obj.AddComponent (typeof(MeshRenderer));
 		MeshFilter filter = obj.AddComponent(typeof(MeshFilter)) as MeshFilter;
 		filter.mesh = msh;
 
-		obj.transform.Translate (new Vector3(obstacles [obstacle_n].init_configuration.x, obstacles [obstacle_n].init_configuration.x, 0));
-		obj.transform.Rotate(new Vector3(0, 0, obstacles [obstacle_n].init_configuration.z));
+		obj.transform.Translate (new Vector3(robots [robot_n].init_configuration.x, robots [robot_n].init_configuration.y, 0));
+		obj.transform.Rotate(new Vector3(0, 0, robots [robot_n].init_configuration.z));
 
 		//把polygon畫成藍色
-		//obj.GetComponent<Renderer> ().material.color = new Color (0.4f, 0.4f, 1.0f, 0.0f);
+		obj.GetComponent<Renderer> ().material.color = new Color (0.4f, 0.4f, 1.0f, 0.0f);
+		//======================================
+
+		//====  畫goal robot ============
+		GameObject obj2 = new GameObject ("Goal");
+		obj2.AddComponent (typeof(MeshRenderer));
+		MeshFilter filter2 = obj2.AddComponent(typeof(MeshFilter)) as MeshFilter;
+		filter2.mesh = msh;
+
+		obj2.transform.Translate (new Vector3(robots [robot_n].goal_configuration.x, robots [robot_n].goal_configuration.y, 0));
+		obj2.transform.Rotate(new Vector3(0, 0, robots [robot_n].goal_configuration.z));
+
+		//把polygon畫成綠色
+		obj2.GetComponent<Renderer> ().material.color = new Color (0.4f, 1.0f, 0.4f, 0.0f);
+		//======================================
 	}
 }

@@ -127,7 +127,7 @@ public class DrawObstacle : MonoBehaviour {
 		MeshFilter filter = obj.AddComponent(typeof(MeshFilter)) as MeshFilter;
 		filter.mesh = msh;
 
-		obj.transform.Translate (new Vector3(obstacles [obstacle_n].init_configuration.x, obstacles [obstacle_n].init_configuration.x, 0));
+		obj.transform.Translate (new Vector3(obstacles [obstacle_n].init_configuration.x, obstacles [obstacle_n].init_configuration.y, 0));
 		obj.transform.Rotate(new Vector3(0, 0, obstacles [obstacle_n].init_configuration.z));
 
 		//把polygon畫成藍色
