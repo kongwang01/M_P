@@ -83,16 +83,59 @@ public class DrawObstacle : MonoBehaviour {
 		}	
 		//=======================================================================
 
+        //==========  畫背景  =====================================================
+        Vector2[] vertices2D_backGround = new Vector2[] {
+            new Vector2(0,0),
+            new Vector2(0,128),
+            new Vector2(128,128),
+            new Vector2(128,0),
+        };
+
+        GameObject backGroundObj = DrawPolygon(vertices2D_backGround);
+        //把BackGround畫成白色
+        backGroundObj.GetComponent<Renderer>().material.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
+        backGroundObj.name = "BackGround";
+        backGroundObj.transform.Translate(0.0f, 0.0f, 1.0f);
+
+
 		//==========  繪圖  =====================================================
 		Vector2[] vertices2D;
 
 		for (int i = 0; i < n_of_obstacles; i++) 
-		{			
-			for (int j = 0; j < obstacles[i].n_of_polygons; j++) 
-			{
-				vertices2D = obstacles[i].polygons[j].vertices.ToArray();
-				DrawPolygon (vertices2D, i);
-			}
+		{
+            //GameObject parentObj;
+            if (obstacles[i].n_of_polygons > 1)
+            {
+                GameObject parentObj = new GameObject("Obstacle");
+                for (int j = 0; j < obstacles[i].n_of_polygons; j++)
+                {
+                    vertices2D = obstacles[i].polygons[j].vertices.ToArray();
+                    GameObject childObj = DrawPolygon(vertices2D);
+                    childObj.transform.parent = parentObj.transform;
+
+                    PolygonCollider2D collider = parentObj.AddComponent(typeof(PolygonCollider2D)) as PolygonCollider2D;
+                    collider.points = vertices2D;
+                }
+                //parentObj.AddComponent(Type.GetType("TransAndRotateForPolygon"));
+                parentObj.transform.Translate(new Vector3(obstacles[i].init_configuration.x, obstacles[i].init_configuration.y, 0));
+                parentObj.transform.Rotate(new Vector3(0, 0, obstacles[i].init_configuration.z));
+            }
+            else
+            {
+                GameObject parentObj;
+                //for (int j = 0; j < obstacles[i].n_of_polygons; j++)
+                //{
+                    vertices2D = obstacles[i].polygons[0].vertices.ToArray();
+                    parentObj = DrawPolygon(vertices2D);
+
+                    PolygonCollider2D collider = parentObj.AddComponent(typeof(PolygonCollider2D)) as PolygonCollider2D;
+                    collider.points = vertices2D;
+                //}
+               //parentObj.AddComponent(Type.GetType("TransAndRotateForPolygon"));
+                parentObj.transform.Translate(new Vector3(obstacles[i].init_configuration.x, obstacles[i].init_configuration.y, 0));
+                parentObj.transform.Rotate(new Vector3(0, 0, obstacles[i].init_configuration.z));
+                parentObj.name = "Obstacle";          
+            }
 		}
 			
 		//==========================================================================================
@@ -103,7 +146,8 @@ public class DrawObstacle : MonoBehaviour {
 
 	}
 
-	public void DrawPolygon(Vector2[] vertices2D, int obstacle_n){
+
+	public GameObject DrawPolygon(Vector2[] vertices2D){
 		// Use the triangulator to get indices for creating triangles
 		Triangulator tr = new Triangulator(vertices2D);
 		int[] indices = tr.Triangulate();
@@ -121,16 +165,24 @@ public class DrawObstacle : MonoBehaviour {
 		msh.RecalculateNormals();
 		msh.RecalculateBounds();
 
-
-		GameObject obj = new GameObject ("Obstacle");
+		GameObject obj = new GameObject ("Polygon");
 		obj.AddComponent (typeof(MeshRenderer));
 		MeshFilter filter = obj.AddComponent(typeof(MeshFilter)) as MeshFilter;
 		filter.mesh = msh;
 
-		obj.transform.Translate (new Vector3(obstacles [obstacle_n].init_configuration.x, obstacles [obstacle_n].init_configuration.y, 0));
-		obj.transform.Rotate(new Vector3(0, 0, obstacles [obstacle_n].init_configuration.z));
+        //PolygonCollider2D collider = obj.AddComponent(typeof(PolygonCollider2D)) as PolygonCollider2D;
+        //collider.points = vertices2D;
+
+        //GameObject objState = GameObject.Find("TransAndRotateForPolygon");
+        //obj.AddComponent(Type.GetType("TransAndRotateForPolygon"));
+
+
+		//obj.transform.Translate (new Vector3(obstacles [obstacle_n].init_configuration.x, obstacles [obstacle_n].init_configuration.y, 0));
+		//obj.transform.Rotate(new Vector3(0, 0, obstacles [obstacle_n].init_configuration.z));
 
 		//把polygon畫成藍色
 		//obj.GetComponent<Renderer> ().material.color = new Color (0.4f, 0.4f, 1.0f, 0.0f);
+
+        return obj;
 	}
 }
