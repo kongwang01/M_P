@@ -35,29 +35,19 @@ public class RayCast : MonoBehaviour
     Quaternion initialRotation;
     float angleFromStart;
 
+	// Use this for initialization
+	void Start () {
+
+	}
+
     void Update()
     {
-        /*Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Input.GetMouseButton(0) && Physics.Raycast(ray, out hit))
-        {
-            Debug.DrawLine(Camera.main.transform.position, hit.transform.position, Color.red, 0.1f, true);
-            Debug.Log(hit.transform.name);
-        }*/
-
-        //メインカメラ上のマウスカーソルのある位置からRayを飛ばす
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        //レイヤーマスク作成
         //int layerMask = LayerMaskNo.DEFAULT;
         int layerMask = -1;
-
-        //Rayの長さ
         float maxDistance = 10;
-
         RaycastHit2D hit = Physics2D.Raycast((Vector2)ray.origin, (Vector2)ray.direction, maxDistance, layerMask);
 
-        //なにかと衝突した時だけそのオブジェクトの名前をログに出す
         if (Input.GetMouseButtonDown(0) && hit.collider)
         {
             IsHit = true; //表示有用左鍵點擊到物件
@@ -69,10 +59,6 @@ public class RayCast : MonoBehaviour
          }
         else if (Input.GetMouseButton(0) && IsHit)
         {
-            //Debug.Log(hit.collider.gameObject.name);
-            //Debug.Log(Input.GetAxis("Mouse X"));
-            //hit.collider.gameObject.transform.Translate(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse X"), 0.0f);
-
             Vector3 curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
 
             Vector3 curPosition = Camera.main.ScreenToWorldPoint(curScreenPoint) + offset;
@@ -80,10 +66,6 @@ public class RayCast : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(0) && IsHit)
         {
-            //Debug.Log(hit.collider.gameObject.name);
-            //Debug.Log(Input.GetAxis("Mouse X"));
-            //hit.collider.gameObject.transform.Translate(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse X"), 0.0f);
-
             Vector3 curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
 
             Vector3 curPosition = Camera.main.ScreenToWorldPoint(curScreenPoint) + offset;
@@ -97,8 +79,6 @@ public class RayCast : MonoBehaviour
             objIsHit = hit.collider.gameObject;
 
             Debug.Log(hit.collider.gameObject.name);
-            //Debug.Log(Input.GetAxis("Mouse X"));
-            //hit.collider.gameObject.transform.Rotate(0.0f, 0.0f, 10.0f);
 
             startDragDir = Camera.main.ScreenToWorldPoint(Input.mousePosition) - objIsHit.transform.position;
             initialRotation = objIsHit.transform.rotation;
@@ -110,15 +90,24 @@ public class RayCast : MonoBehaviour
             currentDragDir = Camera.main.ScreenToWorldPoint(Input.mousePosition) - objIsHit.transform.position;
             //gives you the angle in degrees the mouse has rotated around the object since starting to drag
             angleFromStart = Vector3.Angle(startDragDir, currentDragDir);
-            //Debug.Log(angleFromStart);
-            objIsHit.transform.rotation = initialRotation;
-            objIsHit.transform.Rotate(0.0f, 0.0f, -angleFromStart);
+			//Vector3 judgePosOrNeg = Vector3.Cross(startDragDir, currentDragDir);
+			//if (judgePosOrNeg.y < 0)
+			//	angleFromStart = -angleFromStart;
 
+
+            Debug.Log(angleFromStart);
+            objIsHit.transform.rotation = initialRotation;
+
+            objIsHit.transform.Rotate(0.0f, 0.0f, angleFromStart);
+			
+			initialRotation = objIsHit.transform.rotation;
+			startDragDir = currentDragDir;
         }
         else if (Input.GetMouseButtonUp(1) && IsHit)
         {
             IsHit = false;
-            //Debug.Log(objIsHit.transform.rotation);
+			//objIsHit.transform.Rotate(0.0f, 0.0f, 30.0f);
+            Debug.Log(objIsHit.transform.rotation);
         }
         
     }

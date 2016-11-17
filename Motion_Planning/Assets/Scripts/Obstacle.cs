@@ -8,7 +8,8 @@ public class Obstacle
     //private List<Vector2> vertices = new List<Vector2>();
 	public List<Polygon> polygons = new List<Polygon>();
  	public Vector3 init_configuration = new Vector3();
-	
+	public Vector3 curr_configuration = new Vector3();
+
 	public Obstacle () {
         
     }

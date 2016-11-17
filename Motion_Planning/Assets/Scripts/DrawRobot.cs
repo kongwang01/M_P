@@ -77,6 +77,7 @@ public class DrawRobot : MonoBehaviour {
 			temp_z = Convert.ToSingle( temp_Array[2] );
 			Vector3 v3= new Vector3(temp_x, temp_y, temp_z);
 			temp_r.init_configuration = v3;
+			temp_r.curr_configuration = v3;
 
 			temp_Array = input_string[line++].Split(' ');  //拆分goal configuration
 			temp_x = Convert.ToSingle( temp_Array[0] );
@@ -84,6 +85,7 @@ public class DrawRobot : MonoBehaviour {
 			temp_z = Convert.ToSingle( temp_Array[2] );
 			v3= new Vector3(temp_x, temp_y, temp_z);
 			temp_r.goal_configuration = v3;
+			temp_r.goal_curr_configuration = v3;
 
 			temp_r.n_of_control_points = Convert.ToInt32( input_string[line++] ); //儲存control point
 			for(int k=0; k<temp_r.n_of_control_points; k++)
@@ -131,6 +133,7 @@ public class DrawRobot : MonoBehaviour {
                     GameObject childObj = DrawPolygon(vertices2D);
                     //把polygon畫成藍色
                     childObj.GetComponent<Renderer>().material.color = new Color(0.4f, 0.4f, 1.0f, 0.0f);
+					childObj.GetComponent<Renderer> ().material.shader = Shader.Find ("Unlit/Color");
                     childObj.transform.parent = parentObj.transform;
 
                     PolygonCollider2D collider = parentObj.AddComponent(typeof(PolygonCollider2D)) as PolygonCollider2D;
@@ -148,6 +151,7 @@ public class DrawRobot : MonoBehaviour {
                     GameObject childObj = DrawPolygon(vertices2D);
                     //把polygon畫成綠色
                     childObj.GetComponent<Renderer>().material.color = new Color(0.4f, 1.0f, 0.4f, 0.0f);
+					childObj.GetComponent<Renderer> ().material.shader = Shader.Find ("Unlit/Color");
                     childObj.transform.parent = parentObj2.transform;
 
                     PolygonCollider2D collider = parentObj2.AddComponent(typeof(PolygonCollider2D)) as PolygonCollider2D;
@@ -168,6 +172,7 @@ public class DrawRobot : MonoBehaviour {
                 parentObj = DrawPolygon(vertices2D);
                 //把polygon畫成藍色
                 parentObj.GetComponent<Renderer>().material.color = new Color(0.4f, 0.4f, 1.0f, 0.0f);
+				parentObj.GetComponent<Renderer> ().material.shader = Shader.Find ("Unlit/Color");
 
                 PolygonCollider2D collider = parentObj.AddComponent(typeof(PolygonCollider2D)) as PolygonCollider2D;
                 collider.points = vertices2D;
@@ -183,8 +188,9 @@ public class DrawRobot : MonoBehaviour {
                 //{
                 vertices2D = robots[i].polygons[0].vertices.ToArray();
                 parentObj2 = DrawPolygon(vertices2D);
-                //把polygon畫成藍色
-                parentObj2.GetComponent<Renderer>().material.color = new Color(0.4f, 0.4f, 1.0f, 0.0f);
+				//把polygon畫成綠色
+				parentObj2.GetComponent<Renderer>().material.color = new Color(0.4f, 1.0f, 0.4f, 0.0f);
+				parentObj2.GetComponent<Renderer> ().material.shader = Shader.Find ("Unlit/Color");
 
                 PolygonCollider2D collider2 = parentObj2.AddComponent(typeof(PolygonCollider2D)) as PolygonCollider2D;
                 collider2.points = vertices2D;
@@ -235,83 +241,6 @@ public class DrawRobot : MonoBehaviour {
         //GameObject objState = GameObject.Find("TransAndRotateForPolygon");
         //obj.AddComponent(Type.GetType("TransAndRotateForPolygon"));
 
-
-        //obj.transform.Translate (new Vector3(obstacles [obstacle_n].init_configuration.x, obstacles [obstacle_n].init_configuration.y, 0));
-        //obj.transform.Rotate(new Vector3(0, 0, obstacles [obstacle_n].init_configuration.z));
-
-        //把polygon畫成藍色
-        //obj.GetComponent<Renderer> ().material.color = new Color (0.4f, 0.4f, 1.0f, 0.0f);
-
         return obj;
     }
-    /*public GameObject DrawPolygon_init(Vector2[] vertices2D, int robot_n)
-    {
-		// Use the triangulator to get indices for creating triangles
-		Triangulator tr = new Triangulator(vertices2D);
-		int[] indices = tr.Triangulate();
-
-		// Create the Vector3 vertices
-		Vector3[] vertices = new Vector3[vertices2D.Length];
-		for (int i=0; i<vertices.Length; i++) {
-			vertices[i] = new Vector3(vertices2D[i].x, vertices2D[i].y, 0);
-		}
-
-		// Create the mesh
-		Mesh msh = new Mesh();
-		msh.vertices = vertices;
-		msh.triangles = indices;
-		msh.RecalculateNormals();
-		msh.RecalculateBounds();
-
-
-		//====  畫initial robot ============
-		GameObject obj = new GameObject ("Robot");
-		obj.AddComponent (typeof(MeshRenderer));
-		MeshFilter filter = obj.AddComponent(typeof(MeshFilter)) as MeshFilter;
-		filter.mesh = msh;
-
-		obj.transform.Translate (new Vector3(robots [robot_n].init_configuration.x, robots [robot_n].init_configuration.y, 0));
-		obj.transform.Rotate(new Vector3(0, 0, robots [robot_n].init_configuration.z));
-
-		//把polygon畫成藍色
-		obj.GetComponent<Renderer> ().material.color = new Color (0.4f, 0.4f, 1.0f, 0.0f);
-		//======================================
-
-        return obj;
-	}
-
-    public GameObject DrawPolygon_goal(Vector2[] vertices2D, int robot_n)
-    {
-        // Use the triangulator to get indices for creating triangles
-        Triangulator tr = new Triangulator(vertices2D);
-        int[] indices = tr.Triangulate();
-
-        // Create the Vector3 vertices
-        Vector3[] vertices = new Vector3[vertices2D.Length];
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            vertices[i] = new Vector3(vertices2D[i].x, vertices2D[i].y, 0);
-        }
-
-        // Create the mesh
-        Mesh msh = new Mesh();
-        msh.vertices = vertices;
-        msh.triangles = indices;
-        msh.RecalculateNormals();
-        msh.RecalculateBounds();
-
-        //====  畫goal robot ============
-        GameObject obj = new GameObject("Goal");
-        obj.AddComponent(typeof(MeshRenderer));
-        MeshFilter filter2 = obj.AddComponent(typeof(MeshFilter)) as MeshFilter;
-        filter2.mesh = msh;
-
-        obj.transform.Translate(new Vector3(robots[robot_n].goal_configuration.x, robots[robot_n].goal_configuration.y, 0));
-        obj.transform.Rotate(new Vector3(0, 0, robots[robot_n].goal_configuration.z));
-
-        //把polygon畫成綠色
-        obj.GetComponent<Renderer>().material.color = new Color(0.4f, 1.0f, 0.4f, 0.0f);
-        //======================================
-        return obj;
-    }*/
 }

@@ -77,6 +77,7 @@ public class DrawObstacle : MonoBehaviour {
 			temp_z = Convert.ToSingle( temp_Array[2] );
 			Vector3 v3= new Vector3(temp_x, temp_y, temp_z);
 			temp_o.init_configuration = v3;
+			temp_o.curr_configuration = v3; //讀檔時的位置為初始位置
 
 			obstacles.Add(temp_o);		
 			line++;
@@ -93,7 +94,8 @@ public class DrawObstacle : MonoBehaviour {
 
         GameObject backGroundObj = DrawPolygon(vertices2D_backGround);
         //把BackGround畫成白色
-        backGroundObj.GetComponent<Renderer>().material.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
+		backGroundObj.GetComponent<Renderer>().material.color = new Color(0.3f, 0.3f, 0.3f, 0.0f);
+		backGroundObj.GetComponent<Renderer> ().material.shader = Shader.Find ("Unlit/Color");
         backGroundObj.name = "BackGround";
         backGroundObj.transform.Translate(0.0f, 0.0f, 1.0f);
 
