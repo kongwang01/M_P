@@ -48,8 +48,10 @@ public class RayCast : MonoBehaviour
         float maxDistance = 10;
         RaycastHit2D hit = Physics2D.Raycast((Vector2)ray.origin, (Vector2)ray.direction, maxDistance, layerMask);
 
+
         if (Input.GetMouseButtonDown(0) && hit.collider)
         {
+			Debug.Log ("mouse :" +Input.mousePosition + " , ray :" + (Vector2)ray.origin + " , D :" + (Vector2)ray.direction);
             IsHit = true; //表示有用左鍵點擊到物件
             objIsHit = hit.collider.gameObject; //紀錄點擊到哪個物件
             Debug.Log(hit.collider.gameObject.name);

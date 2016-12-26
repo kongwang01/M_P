@@ -5,7 +5,8 @@ using System.IO;
 using System;
 
 public class DrawRobot : MonoBehaviour {
-	List<Robot> robots = new List<Robot>(); //用來儲存障礙物
+	public static List<Robot> robots = new List<Robot>(); //用來儲存障礙物
+	public static bool robotIsReady = false;
 
 	// Use this for initialization
 	void Start () {
@@ -203,6 +204,7 @@ public class DrawRobot : MonoBehaviour {
         }
 
 		//==========================================================================================
+		robotIsReady = true;
 	}
 
 	// Update is called once per frame

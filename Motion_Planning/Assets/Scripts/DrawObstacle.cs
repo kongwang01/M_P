@@ -5,7 +5,8 @@ using System.IO;
 using System;
 
 public class DrawObstacle : MonoBehaviour {
-	List<Obstacle> obstacles = new List<Obstacle>(); //用來儲存障礙物
+	public static List<Obstacle> obstacles = new List<Obstacle>(); //用來儲存障礙物
+	public static bool obstacleIsReady = false;
 
 	// Use this for initialization
 	void Start () {
@@ -77,10 +78,36 @@ public class DrawObstacle : MonoBehaviour {
 			temp_z = Convert.ToSingle( temp_Array[2] );
 			Vector3 v3= new Vector3(temp_x, temp_y, temp_z);
 			temp_o.init_configuration = v3;
-			temp_o.curr_configuration = v3; //讀檔時的位置為初始位置
+			temp_o.curr_configuration = v3; //讀檔時的位置為初始位置，如果使用者移動or旋轉物件，資訊會存在curr_configuration
 
 			obstacles.Add(temp_o);		
 			line++;
+		}	
+		//=======================================================================
+
+		//==========  把configuration完的點存起來  =====================================================
+		for(int i=0; i<obstacles.Count; i++)
+		{
+			for(int j=0; j<obstacles[i].n_of_polygons; j++)
+			{
+				for(int k=0; k<obstacles[i].polygons[j].n_of_vertices; k++)
+				{
+					double angle = obstacles [i].curr_configuration.z;
+					if (angle > 180.0)
+						angle -= 180.0;
+					//Debug.Log (angle);
+					temp_x = obstacles [i].polygons [j].vertices [k].x;
+					temp_y = obstacles [i].polygons [j].vertices [k].y;
+					//temp_x = temp_x + obstacles [i].curr_configuration.x; //未加上旋轉
+					//temp_y = temp_y + obstacles [i].curr_configuration.y;
+					float rotate_x = ((float)Math.Cos(angle * (Math.PI / 180.0))*temp_x) - ((float)Math.Sin(angle * (Math.PI / 180))*temp_y) + obstacles [i].curr_configuration.x; //cosX - sinY +dx
+					float rotate_y = ((float)Math.Sin(angle * (Math.PI / 180.0))*temp_x) + ((float)Math.Cos(angle * (Math.PI / 180))*temp_y) + obstacles [i].curr_configuration.y; //sinX + cosY +dy
+					//Debug.Log(k + " " +temp_x + " , " + temp_y);
+					Vector2 v2= new Vector2(rotate_x, rotate_y);
+
+					obstacles[i].polygons[j].config_vertices.Add(v2);
+				}
+			}
 		}	
 		//=======================================================================
 
@@ -98,7 +125,6 @@ public class DrawObstacle : MonoBehaviour {
 		backGroundObj.GetComponent<Renderer> ().material.shader = Shader.Find ("Unlit/Color");
         backGroundObj.name = "BackGround";
         backGroundObj.transform.Translate(0.0f, 0.0f, 1.0f);
-
 
 		//==========  繪圖  =====================================================
 		Vector2[] vertices2D;
@@ -141,6 +167,7 @@ public class DrawObstacle : MonoBehaviour {
 		}
 			
 		//==========================================================================================
+		obstacleIsReady = true;
 	}
 
 	// Update is called once per frame
