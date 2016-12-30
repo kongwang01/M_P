@@ -11,6 +11,7 @@ public class Robot
 	public Vector3 goal_curr_configuration = new Vector3();
 	public int n_of_control_points;
 	public List<Vector2> control_points = new List<Vector2>();
+	public List<Vector2> control_points_pos = new List<Vector2>();
 
 	public Robot () {
 

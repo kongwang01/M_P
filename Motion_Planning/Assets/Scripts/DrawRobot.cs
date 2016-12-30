@@ -95,8 +95,10 @@ public class DrawRobot : MonoBehaviour {
 				temp_x = Convert.ToSingle( sArray[0] );
 				temp_y = Convert.ToSingle( sArray[1] );
 				Vector2 v2= new Vector2(temp_x, temp_y);
+				Vector2 v4= new Vector2(temp_x + temp_r.init_configuration.x, temp_y + temp_r.init_configuration.y);
 
 				temp_r.control_points.Add(v2);
+				temp_r.control_points_pos.Add(v3);
 				line++;
 			}
 
@@ -140,6 +142,14 @@ public class DrawRobot : MonoBehaviour {
                     PolygonCollider2D collider = parentObj.AddComponent(typeof(PolygonCollider2D)) as PolygonCollider2D;
                     collider.points = vertices2D;
                 }
+
+				for (int j = 0; j < robots[i].control_points.Count; j++) //加上control point
+				{
+					GameObject controlObj = new GameObject("Control_Point" + (j+1));
+					controlObj.transform.Translate(new Vector3(robots[i].control_points[j].x, robots[i].control_points[j].y, 0));
+
+					controlObj.transform.parent = parentObj.transform;
+				}
                 //parentObj.AddComponent(Type.GetType("TransAndRotateForPolygon"));
                 parentObj.transform.Translate(new Vector3(robots[i].init_configuration.x, robots[i].init_configuration.y, 0));
                 parentObj.transform.Rotate(new Vector3(0, 0, robots[i].init_configuration.z));
@@ -158,6 +168,13 @@ public class DrawRobot : MonoBehaviour {
                     PolygonCollider2D collider = parentObj2.AddComponent(typeof(PolygonCollider2D)) as PolygonCollider2D;
                     collider.points = vertices2D;
                 }
+				for (int j = 0; j < robots[i].control_points.Count; j++) //加上control point
+				{
+					GameObject controlObj = new GameObject("Control_Point" + (j+1));
+					controlObj.transform.Translate(new Vector3(robots[i].control_points[j].x, robots[i].control_points[j].y, 0));
+
+					controlObj.transform.parent = parentObj2.transform;
+				}
                 //parentObj.AddComponent(Type.GetType("TransAndRotateForPolygon"));
                 parentObj2.transform.Translate(new Vector3(robots[i].goal_configuration.x, robots[i].goal_configuration.y, 0));
                 parentObj2.transform.Rotate(new Vector3(0, 0, robots[i].goal_configuration.z));

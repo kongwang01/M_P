@@ -262,6 +262,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BitmapImage: {fileID: 0}
+  BitmapImage2: {fileID: 0}
+  player: {fileID: 0}
+  goal: {fileID: 0}
 --- !u!1 &1312507085
 GameObject:
   m_ObjectHideFlags: 0
@@ -271,6 +274,7 @@ GameObject:
   m_Component:
   - 224: {fileID: 1312507088}
   - 222: {fileID: 1312507087}
+  - 114: {fileID: 1312507086}
   m_Layer: 0
   m_Name: Main
   m_TagString: Untagged
@@ -278,6 +282,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1312507086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1312507085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bb9a8ead739e71499d6d57495d0d683, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 0}
+  goal: {fileID: 0}
 --- !u!222 &1312507087
 CanvasRenderer:
   m_ObjectHideFlags: 0
