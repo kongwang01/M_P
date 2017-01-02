@@ -8,8 +8,10 @@ public class DrawObstacle : MonoBehaviour {
 	public static List<Obstacle> obstacles = new List<Obstacle>(); //用來儲存障礙物
 	public static bool obstacleIsReady = false;
 
+
+
 	// Use this for initialization
-	void Start () {
+	public static void DrawObstacles () {
 
 		int n_of_obstacles = 0;
 		int n_of_polygons = 0;
@@ -119,7 +121,7 @@ public class DrawObstacle : MonoBehaviour {
             new Vector2(128,0),
         };
 
-        GameObject backGroundObj = DrawPolygon(vertices2D_backGround);
+        GameObject backGroundObj = Polygon.DrawPolygon(vertices2D_backGround);
         //把BackGround畫成白色
 		backGroundObj.GetComponent<Renderer>().material.color = new Color(0.3f, 0.3f, 0.3f, 0.0f);
 		backGroundObj.GetComponent<Renderer> ().material.shader = Shader.Find ("Unlit/Color");
@@ -138,7 +140,7 @@ public class DrawObstacle : MonoBehaviour {
                 for (int j = 0; j < obstacles[i].n_of_polygons; j++)
                 {
                     vertices2D = obstacles[i].polygons[j].vertices.ToArray();
-                    GameObject childObj = DrawPolygon(vertices2D);
+                    GameObject childObj = Polygon.DrawPolygon(vertices2D);
                     childObj.transform.parent = parentObj.transform;
 
                     PolygonCollider2D collider = parentObj.AddComponent(typeof(PolygonCollider2D)) as PolygonCollider2D;
@@ -154,7 +156,7 @@ public class DrawObstacle : MonoBehaviour {
                 //for (int j = 0; j < obstacles[i].n_of_polygons; j++)
                 //{
                     vertices2D = obstacles[i].polygons[0].vertices.ToArray();
-                    parentObj = DrawPolygon(vertices2D);
+                    parentObj = Polygon.DrawPolygon(vertices2D);
 
                     PolygonCollider2D collider = parentObj.AddComponent(typeof(PolygonCollider2D)) as PolygonCollider2D;
                     collider.points = vertices2D;
@@ -176,7 +178,7 @@ public class DrawObstacle : MonoBehaviour {
 	}
 
 
-	public GameObject DrawPolygon(Vector2[] vertices2D){
+	/*public GameObject DrawPolygon(Vector2[] vertices2D){
 		// Use the triangulator to get indices for creating triangles
 		Triangulator tr = new Triangulator(vertices2D);
 		int[] indices = tr.Triangulate();
@@ -213,5 +215,5 @@ public class DrawObstacle : MonoBehaviour {
 		//obj.GetComponent<Renderer> ().material.color = new Color (0.4f, 0.4f, 1.0f, 0.0f);
 
         return obj;
-	}
+	}*/
 }

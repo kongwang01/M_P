@@ -9,7 +9,8 @@ public class DrawRobot : MonoBehaviour {
 	public static bool robotIsReady = false;
 
 	// Use this for initialization
-	void Start () {
+    public static void DrawRobots()
+    {
 
 		int n_of_robots = 0;
 		int n_of_polygons = 0;
@@ -133,7 +134,7 @@ public class DrawRobot : MonoBehaviour {
                 for (int j = 0; j < robots[i].n_of_polygons; j++)
                 {
                     vertices2D = robots[i].polygons[j].vertices.ToArray();
-                    GameObject childObj = DrawPolygon(vertices2D);
+                    GameObject childObj = Polygon.DrawPolygon(vertices2D);
                     //把polygon畫成藍色
                     childObj.GetComponent<Renderer>().material.color = new Color(0.4f, 0.4f, 1.0f, 0.0f);
 					childObj.GetComponent<Renderer> ().material.shader = Shader.Find ("Unlit/Color");
@@ -159,7 +160,7 @@ public class DrawRobot : MonoBehaviour {
                 for (int j = 0; j < robots[i].n_of_polygons; j++)
                 {
                     vertices2D = robots[i].polygons[j].vertices.ToArray();
-                    GameObject childObj = DrawPolygon(vertices2D);
+                    GameObject childObj = Polygon.DrawPolygon(vertices2D);
                     //把polygon畫成綠色
                     childObj.GetComponent<Renderer>().material.color = new Color(0.4f, 1.0f, 0.4f, 0.0f);
 					childObj.GetComponent<Renderer> ().material.shader = Shader.Find ("Unlit/Color");
@@ -187,7 +188,7 @@ public class DrawRobot : MonoBehaviour {
                 //for (int j = 0; j < obstacles[i].n_of_polygons; j++)
                 //{
                 vertices2D = robots[i].polygons[0].vertices.ToArray();
-                parentObj = DrawPolygon(vertices2D);
+                parentObj = Polygon.DrawPolygon(vertices2D);
                 //把polygon畫成藍色
                 parentObj.GetComponent<Renderer>().material.color = new Color(0.4f, 0.4f, 1.0f, 0.0f);
 				parentObj.GetComponent<Renderer> ().material.shader = Shader.Find ("Unlit/Color");
@@ -205,7 +206,7 @@ public class DrawRobot : MonoBehaviour {
                 //for (int j = 0; j < obstacles[i].n_of_polygons; j++)
                 //{
                 vertices2D = robots[i].polygons[0].vertices.ToArray();
-                parentObj2 = DrawPolygon(vertices2D);
+                parentObj2 = Polygon.DrawPolygon(vertices2D);
 				//把polygon畫成綠色
 				parentObj2.GetComponent<Renderer>().material.color = new Color(0.4f, 1.0f, 0.4f, 0.0f);
 				parentObj2.GetComponent<Renderer> ().material.shader = Shader.Find ("Unlit/Color");
@@ -229,7 +230,7 @@ public class DrawRobot : MonoBehaviour {
 
 	}
 
-    public GameObject DrawPolygon(Vector2[] vertices2D)
+    /*public GameObject DrawPolygon(Vector2[] vertices2D)
     {
         // Use the triangulator to get indices for creating triangles
         Triangulator tr = new Triangulator(vertices2D);
@@ -261,5 +262,5 @@ public class DrawRobot : MonoBehaviour {
         //obj.AddComponent(Type.GetType("TransAndRotateForPolygon"));
 
         return obj;
-    }
+    }*/
 }

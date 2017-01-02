@@ -8,10 +8,10 @@ public class BuildPotential : MonoBehaviour {
 	public static int[,] bitmap2= new int[129,129]; //建立一個128*128大小的二維陣列，儲存bitmap的資訊
 	public Texture2D BitmapImage;
 	public Texture2D BitmapImage2;
-	bool ok = false;
+	public bool ok = false;
 
-	public GameObject player;
-	public GameObject goal;
+	//public GameObject player;
+	//public GameObject goal;
 	public static bool bitmap_ok = false;
 
 	// Use this for initialization
@@ -29,8 +29,15 @@ public class BuildPotential : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update () {
+	//void Update () {
+
+    //}
+
+    void Update () 
+    //public static void DrawPoten ()
+    {
 		if (DrawRobot.robotIsReady && DrawObstacle.obstacleIsReady && !ok) //確定robot & obstacle已經讀檔完成，才開始畫Bitmap
+        //if (DrawRobot.robotIsReady && DrawObstacle.obstacleIsReady) //確定robot & obstacle已經讀檔完成，才開始畫Bitmap
 		{
 			ok = true;
 			int layerMask = -1;
@@ -53,19 +60,26 @@ public class BuildPotential : MonoBehaviour {
 			//===========================================
 
 			//========  NF1(goal設為0，並往外擴散)  ==========
+            GameObject goal = GameObject.Find("Goal_of_Robot");
 			List<Vector2> goal_points = new List<Vector2>();
 			for (int i = 0; i < DrawRobot.robots[0].control_points.Count; i++) //先算出機器人的第i個control point的位置，並存到list中
 			{
-				Vector2 temp_point = new Vector2(DrawRobot.robots[0].control_points[i].x, DrawRobot.robots[0].control_points[i].y);
+				//Vector2 temp_point = new Vector2(DrawRobot.robots[0].control_points[i].x, DrawRobot.robots[0].control_points[i].y);
 
-				double angle = DrawRobot.robots[0].goal_configuration.z;
+				//double angle = DrawRobot.robots[0].goal_configuration.z;
 
-				float rotate_x = ((float)Math.Cos(angle * (Math.PI / 180.0))*temp_point.x) - ((float)Math.Sin(angle * (Math.PI / 180))*temp_point.y) + DrawRobot.robots[0].goal_configuration.x; //cosX - sinY +dx
-				float rotate_y = ((float)Math.Sin(angle * (Math.PI / 180.0))*temp_point.x) + ((float)Math.Cos(angle * (Math.PI / 180))*temp_point.y) + DrawRobot.robots[0].goal_configuration.y; //sinX + cosY +dy
+				//float rotate_x = ((float)Math.Cos(angle * (Math.PI / 180.0))*temp_point.x) - ((float)Math.Sin(angle * (Math.PI / 180))*temp_point.y) + DrawRobot.robots[0].goal_configuration.x; //cosX - sinY +dx
+				//float rotate_y = ((float)Math.Sin(angle * (Math.PI / 180.0))*temp_point.x) + ((float)Math.Cos(angle * (Math.PI / 180))*temp_point.y) + DrawRobot.robots[0].goal_configuration.y; //sinX + cosY +dy
 				//Debug.Log(k + " " +temp_x + " , " + temp_y);
-				temp_point.x = rotate_x;
-				temp_point.y = rotate_y;
-				Debug.Log(temp_point);
+				//temp_point.x = rotate_x;
+				//temp_point.y = rotate_y;
+				//Debug.Log(temp_point);
+
+                Vector2 temp_point = new Vector2(0.0F, 0.0F);
+
+                temp_point.x = goal.transform.FindChild("Control_Point" + (i+1)).transform.position.x;
+                temp_point.y = goal.transform.FindChild("Control_Point" + (i+1)).transform.position.y;
+
 				goal_points.Add (temp_point);
 				if(i == 0)
 					bitmap [(int)temp_point.x, (int)temp_point.y] = 0;
@@ -76,10 +90,11 @@ public class BuildPotential : MonoBehaviour {
 			SetMap (goal_points [0],1);
 			SetMap (goal_points [1],2);
 			bitmap_ok = true;
+            //ShowOnScreen();
 			//===========================================
 
-			player = GameObject.Find ("Robot");
-			goal = GameObject.Find ("Goal_of_Robot");
+			/*GameObject player = GameObject.Find ("Robot");
+			GameObject goal = GameObject.Find ("Goal_of_Robot");
 
 			Debug.Log( goal.transform.position);
 			Debug.Log( goal.transform.FindChild("Control_Point1").transform.position);
@@ -99,39 +114,38 @@ public class BuildPotential : MonoBehaviour {
 				//	player.transform.Translate (1, 0, 0);
 				}
 
-				/*if ((curr_x + 1 < 128) && (bitmap [x + 1, y] == 254)) {
-					temp_point.x = x+1;
-					temp_point.y = y;//右
-					nf_l.Add(temp_point);
-				}
-
-				if ((curr_x - 1 > 0) && (bitmap [x - 1, y] == 254)) {
-					temp_point.x = x-1;
-					temp_point.y = y;//左
-					nf_l.Add(temp_point);
-				}*/
+				
 				break;
-			}
+			}*/
 		}
 	}
 		
 	void OnGUI() //畫出Potential Field到螢幕上
+    //static void ShowOnScreen()
 	{
 		//if (DrawRobot.robotIsReady && DrawObstacle.obstacleIsReady && !draw_ok) //確定robot & obstacle已經讀檔完成，才開始畫Bitmap
 		if (DrawRobot.robotIsReady && DrawObstacle.obstacleIsReady) //確定robot & obstacle已經讀檔完成，才開始畫Bitmap
 		{
+            //Texture2D BitmapImage = new Texture2D(128, 128);
+            //Texture2D BitmapImage2 = new Texture2D(128, 128);
+
 			//BitmapImage = new Texture2D (128, 128);
 			Rect rect = new Rect (0, 0, 128, 128);
 			//rect.center = new Vector2 (Screen.width / 2, Screen.height / 2);
-			rect.center = new Vector2 (100, 100);
+			rect.center = new Vector2 (100, 80);
 
 			for (int i = 0; i < 128; i++) {
 				for (int j = 0; j < 128; j++) {
 					BitmapImage.SetPixel (i, j, new Vector4(1.0F-0.005F*(float)bitmap [i, j], 1.0F-0.005F*(float)bitmap [i, j], 1.0F-0.005F*(float)bitmap [i, j], 1F));
 				}
 			}
-
+            //Debug.Log("ok");
 			BitmapImage.Apply ();
+            //GameObject poten1 = GameObject.Find("Potential1");
+            //poten1.AddComponent(typeof(MeshRenderer));
+            //poten1.GetComponent<Renderer>().material.color = new Color(1.0f, 1.0f, 1.0f, 0.0f);
+            //poten1.GetComponent<Renderer>().material.shader = Shader.Find("Unlit/Color");
+            //poten1.GetComponent<Renderer>().material.mainTexture = BitmapImage;
 			GUI.DrawTexture (rect, BitmapImage);
 			//draw_ok = true;
 
@@ -139,7 +153,7 @@ public class BuildPotential : MonoBehaviour {
 
 			Rect rect2 = new Rect (0, 0, 128, 128);
 			//rect.center = new Vector2 (Screen.width / 2, Screen.height / 2);
-			rect2.center = new Vector2 (100, 300);
+			rect2.center = new Vector2 (100, 250);
 
 			for (int i = 0; i < 128; i++) {
 				for (int j = 0; j < 128; j++) {
@@ -152,7 +166,7 @@ public class BuildPotential : MonoBehaviour {
 		}	
 	}
 
-	void SetMap(Vector2 goal_point, int map_count)
+    static void SetMap(Vector2 goal_point, int map_count)
 	{
 		List<Vector2> nf_l = new List<Vector2>();
 		Vector2 temp_point = new Vector2((int)goal_point.x +1,(int)goal_point.y); //右
