@@ -1,20 +1,4 @@
-﻿/*using UnityEngine;
-using System.Collections;
-
-public class RayCast : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	    
-	}
-}
-*/
-using UnityEngine;
+﻿using UnityEngine;
 public class RayCast : MonoBehaviour
 {
     GameObject objIsHit;
@@ -51,7 +35,7 @@ public class RayCast : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && hit.collider)
         {
-			Debug.Log ("mouse :" +Input.mousePosition + " , ray :" + (Vector2)ray.origin + " , D :" + (Vector2)ray.direction);
+			//Debug.Log ("mouse :" +Input.mousePosition + " , ray :" + (Vector2)ray.origin + " , D :" + (Vector2)ray.direction);
             IsHit = true; //表示有用左鍵點擊到物件
             objIsHit = hit.collider.gameObject; //紀錄點擊到哪個物件
             Debug.Log(hit.collider.gameObject.name);
@@ -97,7 +81,7 @@ public class RayCast : MonoBehaviour
 			//	angleFromStart = -angleFromStart;
 
 
-            Debug.Log(angleFromStart);
+            //Debug.Log(angleFromStart);
             objIsHit.transform.rotation = initialRotation;
 
             objIsHit.transform.Rotate(0.0f, 0.0f, angleFromStart);
@@ -109,7 +93,7 @@ public class RayCast : MonoBehaviour
         {
             IsHit = false;
 			//objIsHit.transform.Rotate(0.0f, 0.0f, 30.0f);
-            Debug.Log(objIsHit.transform.rotation);
+            Debug.Log(objIsHit.transform.rotation.eulerAngles);
         }
         
     }

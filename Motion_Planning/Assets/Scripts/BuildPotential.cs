@@ -19,12 +19,20 @@ public class BuildPotential : MonoBehaviour {
 		for (int i = 0; i < 129; i++)
 			for (int j = 0; j < 129; j++)
 			{
-				bitmap [i,j] = 254; //初始化所有值為254
-				bitmap2 [i,j] = 254; //初始化所有值為254
+                if ((i == 0) || (i == 128) || (j == 0) || (j == 128))
+                {
+                    bitmap[i, j] = 255; //邊框?
+                    bitmap2[i, j] = 255; //邊框?
+                }
+                else
+                {
+                    bitmap[i, j] = 254; //初始化所有值為254
+                    bitmap2[i, j] = 254; //初始化所有值為254
+                }
 			}
 
-		BitmapImage = new Texture2D (128, 128);
-		BitmapImage2 = new Texture2D (128, 128);
+		BitmapImage = new Texture2D (129, 129);
+		BitmapImage2 = new Texture2D (129, 129);
 		//OnGUI ();
 	}
 
@@ -89,34 +97,11 @@ public class BuildPotential : MonoBehaviour {
 
 			SetMap (goal_points [0],1);
 			SetMap (goal_points [1],2);
+            //for (int i = 0; i < 129; i++)
+            //    Debug.Log(i + " , 1 : " +bitmap[i, 1]);
 			bitmap_ok = true;
             //ShowOnScreen();
 			//===========================================
-
-			/*GameObject player = GameObject.Find ("Robot");
-			GameObject goal = GameObject.Find ("Goal_of_Robot");
-
-			Debug.Log( goal.transform.position);
-			Debug.Log( goal.transform.FindChild("Control_Point1").transform.position);
-			Debug.Log( goal.transform.FindChild("Control_Point2").transform.position);
-
-			while (goal.transform.FindChild("Control_Point1").transform.position != player.transform.FindChild("Control_Point1").transform.position) {
-				int curr_x = (int)player.transform.FindChild ("Control_Point1").transform.position.x;
-				int curr_y = (int)player.transform.FindChild ("Control_Point1").transform.position.y;
-				int curr_potential_value = bitmap [curr_x, curr_y];
-				Debug.Log(curr_potential_value);
-
-				if ((curr_y + 1 < 128) && (bitmap [curr_x, curr_y + 1] < curr_potential_value)) {
-				//	player.transform.Translate (-1, 0, 0);
-				}
-
-				if ((curr_y - 1 > 0) && (bitmap [curr_x, curr_y - 1] < curr_potential_value)) {
-				//	player.transform.Translate (1, 0, 0);
-				}
-
-				
-				break;
-			}*/
 		}
 	}
 		
@@ -130,12 +115,12 @@ public class BuildPotential : MonoBehaviour {
             //Texture2D BitmapImage2 = new Texture2D(128, 128);
 
 			//BitmapImage = new Texture2D (128, 128);
-			Rect rect = new Rect (0, 0, 128, 128);
+			Rect rect = new Rect (0, 0, 129, 129);
 			//rect.center = new Vector2 (Screen.width / 2, Screen.height / 2);
 			rect.center = new Vector2 (100, 80);
 
-			for (int i = 0; i < 128; i++) {
-				for (int j = 0; j < 128; j++) {
+			for (int i = 0; i < 129; i++) {
+				for (int j = 0; j < 129; j++) {
 					BitmapImage.SetPixel (i, j, new Vector4(1.0F-0.005F*(float)bitmap [i, j], 1.0F-0.005F*(float)bitmap [i, j], 1.0F-0.005F*(float)bitmap [i, j], 1F));
 				}
 			}
@@ -151,12 +136,12 @@ public class BuildPotential : MonoBehaviour {
 
 
 
-			Rect rect2 = new Rect (0, 0, 128, 128);
+			Rect rect2 = new Rect (0, 0, 129, 129);
 			//rect.center = new Vector2 (Screen.width / 2, Screen.height / 2);
 			rect2.center = new Vector2 (100, 250);
 
-			for (int i = 0; i < 128; i++) {
-				for (int j = 0; j < 128; j++) {
+			for (int i = 0; i < 129; i++) {
+				for (int j = 0; j < 129; j++) {
 					BitmapImage2.SetPixel (i, j, new Vector4(1.0F-0.005F*(float)bitmap2 [i, j], 1.0F-0.005F*(float)bitmap2 [i, j], 1.0F-0.005F*(float)bitmap2 [i, j], 1F));
 				}
 			}
@@ -214,7 +199,7 @@ public class BuildPotential : MonoBehaviour {
 							nf_l.Add(temp_point);
 						}
 
-						if ((y - 1 > 0) && (bitmap [x, y - 1] == 254)) {
+						if ((y - 1 >= 0) && (bitmap [x, y - 1] == 254)) {
 							temp_point.x = x;
 							temp_point.y = y-1;//下
 							nf_l.Add(temp_point);
@@ -226,7 +211,7 @@ public class BuildPotential : MonoBehaviour {
 							nf_l.Add(temp_point);
 						}
 
-						if ((x - 1 > 0) && (bitmap [x - 1, y] == 254)) {
+						if ((x - 1 >= 0) && (bitmap [x - 1, y] == 254)) {
 							temp_point.x = x-1;
 							temp_point.y = y;//左
 							nf_l.Add(temp_point);
@@ -242,7 +227,7 @@ public class BuildPotential : MonoBehaviour {
 							nf_l.Add(temp_point);
 						}
 
-						if ((y - 1 > 0) && (bitmap2 [x, y - 1] == 254)) {
+						if ((y - 1 >= 0) && (bitmap2 [x, y - 1] == 254)) {
 							temp_point.x = x;
 							temp_point.y = y-1;//下
 							nf_l.Add(temp_point);
@@ -254,7 +239,7 @@ public class BuildPotential : MonoBehaviour {
 							nf_l.Add(temp_point);
 						}
 
-						if ((x - 1 > 0) && (bitmap2 [x - 1, y] == 254)) {
+						if ((x - 1 >= 0) && (bitmap2 [x - 1, y] == 254)) {
 							temp_point.x = x-1;
 							temp_point.y = y;//左
 							nf_l.Add(temp_point);
