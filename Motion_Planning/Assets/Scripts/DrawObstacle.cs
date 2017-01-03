@@ -7,12 +7,14 @@ using System;
 public class DrawObstacle : MonoBehaviour {
 	public static List<Obstacle> obstacles = new List<Obstacle>(); //用來儲存障礙物
 	public static bool obstacleIsReady = false;
+	public static string obstacle_path = Application.dataPath + "/Resources/obstacle.dat";
 
 	public static void DrawObstacles () {
 		int n_of_obstacles = 0;
 		int n_of_polygons = 0;
 		//======  存讀檔   =======================================================
-		string path = Application.dataPath + "/Resources/obstacle.dat";
+		//string path = Application.dataPath + "/Resources/obstacle.dat";
+		string path = obstacle_path;
 		if (!File.Exists(path)){
 			Debug.Log("Error Path: " + path);
 			return;

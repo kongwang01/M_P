@@ -6,9 +6,13 @@ using System;
 public class BuildPotential : MonoBehaviour {
 	public static int[,] bitmap= new int[129,129]; //建立一個128*128大小的二維陣列，儲存bitmap的資訊
 	public static int[,] bitmap2= new int[129,129]; //建立一個128*128大小的二維陣列，儲存bitmap的資訊
+	public static int[,] SearchBitmap= new int[129,129]; //建立一個128*128大小的二維陣列，儲存bitmap的資訊
 	public Texture2D BitmapImage;
 	public Texture2D BitmapImage2;
+	public Texture2D SearchImage;
 	public bool ok = false;
+
+	public bool IsDebug = true;
 
 	//public GameObject player;
 	//public GameObject goal;
@@ -23,16 +27,19 @@ public class BuildPotential : MonoBehaviour {
                 {
                     bitmap[i, j] = 255; //邊框?
                     bitmap2[i, j] = 255; //邊框?
+					SearchBitmap[i, j] = 255; //邊框?
                 }
                 else
                 {
                     bitmap[i, j] = 254; //初始化所有值為254
                     bitmap2[i, j] = 254; //初始化所有值為254
+					SearchBitmap[i, j] = 0; //初始化所有值為254
                 }
 			}
 
 		BitmapImage = new Texture2D (129, 129);
 		BitmapImage2 = new Texture2D (129, 129);
+		SearchImage = new Texture2D (129, 129);
 		//OnGUI ();
 	}
 
@@ -62,6 +69,7 @@ public class BuildPotential : MonoBehaviour {
 						if (hit.collider.gameObject.name == "Obstacle") { //如果射到的是障礙物才會填為255
 							bitmap [i, j] = 255;
 							bitmap2 [i, j] = 255;
+							SearchBitmap [i, j] = 255;
 						}
 					}
 				}
@@ -148,6 +156,25 @@ public class BuildPotential : MonoBehaviour {
 
 			BitmapImage2.Apply ();
 			GUI.DrawTexture (rect2, BitmapImage2);
+
+			if (IsDebug) 
+			{
+				Rect rect3 = new Rect (0, 0, 129, 129);
+				//rect.center = new Vector2 (Screen.width / 2, Screen.height / 2);
+				rect3.center = new Vector2 (100, 450);
+
+				for (int i = 0; i < 129; i++) {
+					for (int j = 0; j < 129; j++) {
+						if(SearchBitmap [i, j] == 250) //路徑設為藍色
+							SearchImage.SetPixel (i, j, Color.blue);
+						else
+							SearchImage.SetPixel (i, j, new Vector4(1.0F-0.005F*(float)SearchBitmap [i, j], 1.0F-0.005F*(float)SearchBitmap [i, j], 1.0F-0.005F*(float)SearchBitmap [i, j], 1F));
+					}
+				}
+
+				SearchImage.Apply ();
+				GUI.DrawTexture (rect3, SearchImage);
+			}
 		}	
 	}
 

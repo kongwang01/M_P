@@ -7,6 +7,7 @@ using System;
 public class DrawRobot : MonoBehaviour {
 	public static List<Robot> robots = new List<Robot>(); //用來儲存障礙物
 	public static bool robotIsReady = false;
+	public static string robot_path = Application.dataPath + "/Resources/robot.dat";
 
     public static void DrawRobots()
     {
@@ -14,7 +15,8 @@ public class DrawRobot : MonoBehaviour {
 		int n_of_robots = 0;
 		int n_of_polygons = 0;
 		//======  存讀檔   =======================================================
-		string path = Application.dataPath + "/Resources/robot.dat";
+		//string path = Application.dataPath + "/Resources/robot.dat";
+		string path = robot_path;
 		if (!File.Exists(path)){
 			Debug.Log("Error Path: " + path);
 			return;
