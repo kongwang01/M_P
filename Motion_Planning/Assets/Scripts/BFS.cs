@@ -9,8 +9,9 @@ public class BFS : MonoBehaviour {
     List<Vector3> finded_path;
 	Vector3 x_init;
 
-    List<Vector2> robot_edges_point = new List<Vector2>(); //用來儲存robot邊上的所有點
+    float angle_diff;  //角度要分多少格
 
+    List<Vector2> robot_edges_point = new List<Vector2>(); //用來儲存robot邊上的所有點
 
     GameObject player;
     //Vector3 x_init = DrawRobot.robots[0].curr_configuration;
@@ -20,6 +21,7 @@ public class BFS : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        //Application.targetFrameRate = 10; //設定每秒跑幾個frame? , 還要把Edit/Project Settings/Quarlity/V Sync Count改為Don't Sync
 
         for (int i = 0; i < 129; i++)
             for (int j = 0; j < 129; j++)
@@ -70,7 +72,7 @@ public class BFS : MonoBehaviour {
                 //Debug.Log(tempV21);
                 Findline(tempV21, tempV22);
             }
-
+        angle_diff = main_GUI.For_BFS_angle_diff; //角度要分多少格
         BFS_Search();
         //OPEN_list.Add(x_init);
 
@@ -219,7 +221,7 @@ public class BFS : MonoBehaviour {
 					//}
 				//}
 
-                if (((int)search_p.x == (int)goal_config.x) && (((int)search_p.y + 1) == (int)goal_config.y) && ((int)search_p.z == (int)goal_config.z)) //x' == x_goal
+                if (((int)search_p.x == (int)goal_config.x) && (((int)search_p.y + 1) == (int)goal_config.y) && ((int)(search_p.z/angle_diff) == (int)(goal_config.z/angle_diff))) //x' == x_goal
                 {
                     //Debug.Log("y+1 :" + (int)search_p.x + " , " + ((int)search_p.y + 1) + " , " + (int)search_p.z);
                     success = true;
@@ -237,7 +239,7 @@ public class BFS : MonoBehaviour {
 				OPEN_list.Add (new Vector3 (search_p.x, search_p.y - 1.0F, search_p.z)); //insert x' in OPEN
 				OPEN_list_potential_value.Add(temp_potential_value);
 
-                if (((int)search_p.x == (int)goal_config.x) && (((int)search_p.y - 1) == (int)goal_config.y) && ((int)search_p.z == (int)goal_config.z)) //x' == x_goal
+                if (((int)search_p.x == (int)goal_config.x) && (((int)search_p.y - 1) == (int)goal_config.y) && ((int)(search_p.z / angle_diff) == (int)(goal_config.z / angle_diff))) //x' == x_goal
                 {
                     //Debug.Log("y-1 :" + (int)search_p.x + " , " + ((int)search_p.y - 1) + " , " + (int)search_p.z);
                     success = true;
@@ -255,7 +257,7 @@ public class BFS : MonoBehaviour {
                 OPEN_list.Add(new Vector3(search_p.x + 1.0F, search_p.y, search_p.z)); //insert x' in OPEN
 				OPEN_list_potential_value.Add(temp_potential_value);
 
-                if ((((int)search_p.x + 1) == (int)goal_config.x) && ((int)search_p.y == (int)goal_config.y) && ((int)search_p.z == (int)goal_config.z)) //x' == x_goal
+                if ((((int)search_p.x + 1) == (int)goal_config.x) && ((int)search_p.y == (int)goal_config.y) && ((int)(search_p.z / angle_diff) == (int)(goal_config.z / angle_diff))) //x' == x_goal
                 {
                     //Debug.Log("x+1 :" + ((int)search_p.x + 1) + " , " + (int)search_p.y + " , " + (int)search_p.z);
                     success = true;
@@ -273,7 +275,7 @@ public class BFS : MonoBehaviour {
 				OPEN_list.Add(new Vector3(search_p.x - 1.0F, search_p.y, search_p.z)); //insert x' in OPEN
 				OPEN_list_potential_value.Add(temp_potential_value);
 
-                if ((((int)search_p.x - 1) == (int)goal_config.x) && ((int)search_p.y == (int)goal_config.y) && ((int)search_p.z == (int)goal_config.z)) //x' == x_goal
+                if ((((int)search_p.x - 1) == (int)goal_config.x) && ((int)search_p.y == (int)goal_config.y) && ((int)(search_p.z / angle_diff) == (int)(goal_config.z / angle_diff))) //x' == x_goal
                 {
                     //Debug.Log("x-1 :" + ((int)search_p.x - 1) + " , " + (int)search_p.y + " , " + (int)search_p.z);
                     success = true;
@@ -282,53 +284,37 @@ public class BFS : MonoBehaviour {
 
 
 
-			if (((int)search_p.z + 1 < 360) && (BFS_tree[(int)search_p.x, (int)search_p.y, (int)search_p.z + 1].x == -1)
-                && CollitionDetect((int)search_p.x - (int)x_init.x, (int)search_p.y - (int)x_init.y, (int)search_p.z - (int)x_init.z + 1)) //檢查angle + 1合不合法
+            if (((int)search_p.z + (int)angle_diff < 360) && (BFS_tree[(int)search_p.x, (int)search_p.y, (int)search_p.z + (int)angle_diff].x == -1)
+                && CollitionDetect((int)search_p.x - (int)x_init.x, (int)search_p.y - (int)x_init.y, (int)search_p.z - (int)x_init.z + (int)angle_diff)) //檢查angle + 1合不合法
             {
                 //Debug.Log((int)search_p.x + " , " + ((int)search_p.y) + " , " + ((int)search_p.z + 1));
-                BFS_tree[(int)search_p.x, (int)search_p.y, (int)search_p.z + 1] = search_p; //install x' in T & mark x' visited
-				temp_potential_value = Arbitration_U(new Vector3(search_p.x, search_p.y, search_p.z + 1.0F));
+                BFS_tree[(int)search_p.x, (int)search_p.y, (int)search_p.z + (int)angle_diff] = search_p; //install x' in T & mark x' visited
+                temp_potential_value = Arbitration_U(new Vector3(search_p.x, search_p.y, search_p.z + angle_diff));
 
-                OPEN_list.Add(new Vector3(search_p.x, search_p.y, search_p.z + 1.0F)); //insert x' in OPEN
+                OPEN_list.Add(new Vector3(search_p.x, search_p.y, search_p.z + angle_diff)); //insert x' in OPEN
 				OPEN_list_potential_value.Add(temp_potential_value);
 
-                if (((int)search_p.x == (int)goal_config.x) && ((int)search_p.y == (int)goal_config.y) && (((int)search_p.z + 1) == (int)goal_config.z)) //x' == x_goal
+                if (((int)search_p.x == (int)goal_config.x) && ((int)search_p.y == (int)goal_config.y) && ((int)((search_p.z+angle_diff) / angle_diff) == (int)(goal_config.z / angle_diff))) //x' == x_goal
                 {
                     success = true;
                 }
             }
 
-            if (((int)search_p.z - 1 >= 0) && (BFS_tree[(int)search_p.x, (int)search_p.y, (int)search_p.z - 1].x == -1)
-                && CollitionDetect((int)search_p.x - (int)x_init.x, (int)search_p.y - (int)x_init.y, (int)search_p.z - (int)x_init.z - 1)) //檢查angle - 1合不合法
+            if (((int)search_p.z - (int)angle_diff >= 0) && (BFS_tree[(int)search_p.x, (int)search_p.y, (int)search_p.z - (int)angle_diff].x == -1)
+                && CollitionDetect((int)search_p.x - (int)x_init.x, (int)search_p.y - (int)x_init.y, (int)search_p.z - (int)x_init.z - (int)angle_diff)) //檢查angle - 1合不合法
             {
                 //Debug.Log((int)search_p.x + " , " + ((int)search_p.y) + " , " + (int)search_p.z + 1);
-                BFS_tree[(int)search_p.x, (int)search_p.y, (int)search_p.z - 1] = search_p; //install x' in T & mark x' visited
-				temp_potential_value = Arbitration_U(new Vector3(search_p.x, search_p.y, search_p.z - 1.0F));
+                BFS_tree[(int)search_p.x, (int)search_p.y, (int)search_p.z - (int)angle_diff] = search_p; //install x' in T & mark x' visited
+                temp_potential_value = Arbitration_U(new Vector3(search_p.x, search_p.y, search_p.z - angle_diff));
 
-				OPEN_list.Add(new Vector3(search_p.x, search_p.y, search_p.z - 1.0F)); //insert x' in OPEN
+                OPEN_list.Add(new Vector3(search_p.x, search_p.y, search_p.z - angle_diff)); //insert x' in OPEN
 				OPEN_list_potential_value.Add(temp_potential_value);
 
-                if (((int)search_p.x == (int)goal_config.x) && ((int)search_p.y == (int)goal_config.y) && (((int)search_p.z - 1) == (int)goal_config.z)) //x' == x_goal
+                if (((int)search_p.x == (int)goal_config.x) && ((int)search_p.y == (int)goal_config.y) && ((int)((search_p.z - angle_diff) / angle_diff) == (int)(goal_config.z / angle_diff))) //x' == x_goal
                 {
                     success = true;
                 }
             }
-
-            /*
-            if ((curr_y - 1 > 0) && (BuildPotential.bitmap[curr_x, curr_y - 1] <= curr_potential_value) && CollitionDetect(0, -1))
-            {
-                player.transform.Translate(0, -1, 0, Space.World);
-            }
-
-            if ((curr_x + 1 < 128) && (BuildPotential.bitmap[curr_x + 1, curr_y] <= curr_potential_value) && CollitionDetect(1, 0))
-            {
-                player.transform.Translate(1, 0, 0, Space.World);
-            }
-
-            if ((curr_x - 1 > 0) && (BuildPotential.bitmap[curr_x - 1, curr_y] <= curr_potential_value) && CollitionDetect(-1, 0))
-            {
-                player.transform.Translate(-1, 0, 0, Space.World);
-            }*/
 
             if (success)
                 break;
@@ -342,6 +328,7 @@ public class BFS : MonoBehaviour {
         if (success)
         {
             Debug.Log("success!!!!!");
+            main_GUI.ProcessText.text = "Path Find!!";
             finded_path = new List<Vector3>(); //用來儲存找到的path
 
             Vector3 tracing_path = goal_config;
@@ -358,6 +345,8 @@ public class BFS : MonoBehaviour {
             }
 
         }
+        else
+            main_GUI.ProcessText.text = "No Path.";
 
     }
 

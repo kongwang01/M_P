@@ -4,15 +4,21 @@ using System.Collections;
 
 public class main_GUI : MonoBehaviour {
 	public Text MessageText;
+    public static Text ProcessText;
 	bool drawMapOrNot = false;
     bool FirstPotential = true;
     bool FirstBFS = true;
     public static bool showPathOrNot = false;
 
+    public float User_angle_diff = 10.0F;
+    public static float For_BFS_angle_diff;  //BFS的角度要分多少格
+
 	// Use this for initialization
 	void Start () {
         //DrawObstacle.DrawObstacles();
         //DrawRobot.DrawRobots();
+        ProcessText = GameObject.Find("P_Text").GetComponent<Text>();
+        For_BFS_angle_diff = User_angle_diff;
 	}
 	
 	// Update is called once per frame
@@ -71,6 +77,7 @@ public class main_GUI : MonoBehaviour {
 			DrawObstacle.DrawObstacles ();
 			DrawRobot.DrawRobots ();
 		}
+        ProcessText.text = "DrawPotentialField -> BFS -> ShowPath";
     }
 
     public void DrawPotential()
@@ -86,6 +93,7 @@ public class main_GUI : MonoBehaviour {
             Destroy(this.gameObject.GetComponent<BuildPotential>());
             this.gameObject.AddComponent<BuildPotential>();
         }
+        ProcessText.text = "DrawPotentialField -> BFS -> ShowPath";
     }
 
     public void SearchPath()
@@ -97,11 +105,14 @@ public class main_GUI : MonoBehaviour {
 
     public void BFSearch()
     {
+        ProcessText.text = "Path Searching...";
         //GameObject scr = GameObject.Find("SrarchPath");
         //BuildPotential.DrawPoten();
         //this.gameObject.AddComponent<BFS>();
 		if (!FirstPotential) //確定有畫完potential才能做BFS
 		{
+            For_BFS_angle_diff = User_angle_diff;
+            ProcessText.text = "Path Searching...";
 			if (FirstBFS)
 			{
 				this.gameObject.AddComponent<BFS> ();
