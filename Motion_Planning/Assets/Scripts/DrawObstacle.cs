@@ -120,6 +120,7 @@ public class DrawObstacle : MonoBehaviour {
         };
 
         GameObject backGroundObj = Polygon.DrawPolygon(vertices2D_backGround);
+		backGroundObj.tag = "Motion_Planning";
         //把BackGround畫成白色
 		backGroundObj.GetComponent<Renderer>().material.color = new Color(0.3f, 0.3f, 0.3f, 0.0f);
 		backGroundObj.GetComponent<Renderer> ().material.shader = Shader.Find ("Unlit/Color");
@@ -135,6 +136,7 @@ public class DrawObstacle : MonoBehaviour {
             if (obstacles[i].n_of_polygons > 1)
             {
                 GameObject parentObj = new GameObject("Obstacle");
+				parentObj.tag = "Motion_Planning";
                 for (int j = 0; j < obstacles[i].n_of_polygons; j++)
                 {
                     vertices2D = obstacles[i].polygons[j].vertices.ToArray();
@@ -162,7 +164,8 @@ public class DrawObstacle : MonoBehaviour {
                //parentObj.AddComponent(Type.GetType("TransAndRotateForPolygon"));
                 parentObj.transform.Translate(new Vector3(obstacles[i].init_configuration.x, obstacles[i].init_configuration.y, 0));
                 parentObj.transform.Rotate(new Vector3(0, 0, obstacles[i].init_configuration.z));
-                parentObj.name = "Obstacle";          
+                parentObj.name = "Obstacle";   
+				parentObj.tag = "Motion_Planning";
             }
 		}
 			

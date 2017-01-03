@@ -23,8 +23,8 @@ public class main_GUI : MonoBehaviour {
 	public void ChangeData(int index)
 	{
 		if (index == 0) {
-			DrawRobot.robot_path = Application.dataPath + "/Resources/robot02.dat";
-			DrawObstacle.obstacle_path = Application.dataPath + "/Resources/map02.dat";
+			DrawRobot.robot_path = Application.dataPath + "/Resources/robot.dat";
+			DrawObstacle.obstacle_path = Application.dataPath + "/Resources/obstacle.dat";
 		}
 		else if (index == 1) {
 			DrawRobot.robot_path = Application.dataPath + "/Resources/robot02.dat";
@@ -57,14 +57,20 @@ public class main_GUI : MonoBehaviour {
 			DrawRobot.DrawRobots ();
 			drawMapOrNot = true;
 		}
-		//else //第二次以後, 先刪掉原本儲存的資料再畫
-		//{
-		//	DrawObstacle.obstacles.Clear();
-		//	DrawRobot.robots.Clear();
+		else //第二次以後, 先刪掉原本儲存的資料再畫
+		{
+			DrawObstacle.obstacles.Clear();
+			DrawRobot.robots.Clear();
 
-		//	DrawObstacle.DrawObstacles ();
-		//	DrawRobot.DrawRobots ();
-		//}
+			GameObject[] old_obj;
+			old_obj = GameObject.FindGameObjectsWithTag ("Motion_Planning");
+
+			for (int i = 0; i < old_obj.Length; i++)
+				Destroy (old_obj [i]);
+
+			DrawObstacle.DrawObstacles ();
+			DrawRobot.DrawRobots ();
+		}
     }
 
     public void DrawPotential()

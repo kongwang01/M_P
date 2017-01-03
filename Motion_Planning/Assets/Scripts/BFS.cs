@@ -7,6 +7,7 @@ public class BFS : MonoBehaviour {
     public static Vector3[,,] BFS_tree = new Vector3[129, 129, 360]; //建立一個128*128*360大小的三維陣列，儲存(x, y,角度)是否有拜訪過
     bool success = false;
     List<Vector3> finded_path;
+	Vector3 x_init;
 
     List<Vector2> robot_edges_point = new List<Vector2>(); //用來儲存robot邊上的所有點
 
@@ -163,7 +164,7 @@ public class BFS : MonoBehaviour {
 
         Vector3[] control_p = new Vector3[2];
 
-		Vector3 x_init = DrawRobot.robots[0].curr_configuration;
+		x_init = DrawRobot.robots[0].curr_configuration;
 		Vector3 goal_config = DrawRobot.robots[0].goal_curr_configuration;
 
         //Debug.Log(x_init);
@@ -192,6 +193,7 @@ public class BFS : MonoBehaviour {
 
 			Vector3 search_p = OPEN_list[smallest_index]; //取最小的
 			//Debug.Log(OPEN_list_potential_value [smallest_index]);
+			//Debug.Log(search_p);
 			OPEN_list.RemoveAt(smallest_index);
 			OPEN_list_potential_value.RemoveAt(smallest_index);
 
@@ -219,12 +221,12 @@ public class BFS : MonoBehaviour {
 
                 if (((int)search_p.x == (int)goal_config.x) && (((int)search_p.y + 1) == (int)goal_config.y) && ((int)search_p.z == (int)goal_config.z)) //x' == x_goal
                 {
-                    Debug.Log("y+1 :" + (int)search_p.x + " , " + ((int)search_p.y + 1) + " , " + (int)search_p.z);
+                    //Debug.Log("y+1 :" + (int)search_p.x + " , " + ((int)search_p.y + 1) + " , " + (int)search_p.z);
                     success = true;
                 }
             }
 
-            if (((int)search_p.y - 1 > 0) && (BFS_tree[(int)search_p.x, (int)search_p.y - 1, (int)search_p.z].x == -1)
+			 if (((int)search_p.y - 1 > 0) && (BFS_tree[(int)search_p.x, (int)search_p.y - 1, (int)search_p.z].x == -1)
                 && CollitionDetect((int)search_p.x - (int)x_init.x, (int)search_p.y - (int)x_init.y - 1, (int)search_p.z - (int)x_init.z)) //檢查y-1合不合法
             {
                // if ((int)search_p.x == 95)
@@ -237,7 +239,7 @@ public class BFS : MonoBehaviour {
 
                 if (((int)search_p.x == (int)goal_config.x) && (((int)search_p.y - 1) == (int)goal_config.y) && ((int)search_p.z == (int)goal_config.z)) //x' == x_goal
                 {
-                    Debug.Log("y-1 :" + (int)search_p.x + " , " + ((int)search_p.y - 1) + " , " + (int)search_p.z);
+                    //Debug.Log("y-1 :" + (int)search_p.x + " , " + ((int)search_p.y - 1) + " , " + (int)search_p.z);
                     success = true;
                 }
             }
@@ -255,7 +257,7 @@ public class BFS : MonoBehaviour {
 
                 if ((((int)search_p.x + 1) == (int)goal_config.x) && ((int)search_p.y == (int)goal_config.y) && ((int)search_p.z == (int)goal_config.z)) //x' == x_goal
                 {
-                    Debug.Log("x+1 :" + ((int)search_p.x + 1) + " , " + (int)search_p.y + " , " + (int)search_p.z);
+                    //Debug.Log("x+1 :" + ((int)search_p.x + 1) + " , " + (int)search_p.y + " , " + (int)search_p.z);
                     success = true;
                 }
             }
@@ -273,14 +275,14 @@ public class BFS : MonoBehaviour {
 
                 if ((((int)search_p.x - 1) == (int)goal_config.x) && ((int)search_p.y == (int)goal_config.y) && ((int)search_p.z == (int)goal_config.z)) //x' == x_goal
                 {
-                    Debug.Log("x-1 :" + ((int)search_p.x - 1) + " , " + (int)search_p.y + " , " + (int)search_p.z);
+                    //Debug.Log("x-1 :" + ((int)search_p.x - 1) + " , " + (int)search_p.y + " , " + (int)search_p.z);
                     success = true;
                 }
             }
 
 
 
-           /* if (((int)search_p.z + 1 < 360) && (BFS_tree[(int)search_p.x, (int)search_p.y, (int)search_p.z + 1].x == -1)
+			if (((int)search_p.z + 1 < 360) && (BFS_tree[(int)search_p.x, (int)search_p.y, (int)search_p.z + 1].x == -1)
                 && CollitionDetect((int)search_p.x - (int)x_init.x, (int)search_p.y - (int)x_init.y, (int)search_p.z - (int)x_init.z + 1)) //檢查angle + 1合不合法
             {
                 //Debug.Log((int)search_p.x + " , " + ((int)search_p.y) + " , " + ((int)search_p.z + 1));
@@ -310,7 +312,7 @@ public class BFS : MonoBehaviour {
                 {
                     success = true;
                 }
-            }*/
+            }
 
             /*
             if ((curr_y - 1 > 0) && (BuildPotential.bitmap[curr_x, curr_y - 1] <= curr_potential_value) && CollitionDetect(0, -1))
@@ -367,7 +369,9 @@ public class BFS : MonoBehaviour {
             if(finded_path.Count != 0)
             {
                 player.transform.position = new Vector3(finded_path[0].x, finded_path[0].y, 0.0F);
-                player.transform.rotation = new Quaternion(0.0F, 0.0F, finded_path[0].z, 0.0F);
+				//Debug.Log (finded_path [0].z);
+                player.transform.rotation = Quaternion.Euler(0.0F, 0.0F, finded_path[0].z);
+				//Debug.Log (player.transform.rotation.eulerAngles);
                 finded_path.RemoveAt(0);
             }
         }
@@ -377,7 +381,6 @@ public class BFS : MonoBehaviour {
     {
 		Vector2 control_p1 = new Vector2 (0, 0);
 		Vector2 control_p2 = new Vector2 (0, 0);
-
 
 		double angle = config.z;
 		if (angle > 180.0)
@@ -391,6 +394,16 @@ public class BFS : MonoBehaviour {
 		float rotate_y = ((float)Math.Sin(angle * (Math.PI / 180.0))*temp_x) + ((float)Math.Cos(angle * (Math.PI / 180))*temp_y) + config.y; //sinX + cosY +dy
 		//Debug.Log(k + " " +temp_x + " , " + temp_y);
 		//Vector2 v2= new Vector2(rotate_x, rotate_y);
+
+		if ((int)rotate_x > 127) //因為旋轉有可能超出範圍, 因此先判斷是否在1~127的範圍
+			rotate_x = 127.0F;
+		if ((int)rotate_x <= 0)
+			rotate_x = 1.0F;
+		if ((int)rotate_y > 127)
+			rotate_y = 127.0F;
+		if ((int)rotate_y <= 0)
+			rotate_y = 1.0F;
+
 		int potential_value = BuildPotential.bitmap[(int)rotate_x, (int)rotate_y];
 
 
@@ -402,6 +415,16 @@ public class BFS : MonoBehaviour {
 		float rotate_y2 = ((float)Math.Sin(angle * (Math.PI / 180.0))*temp_x2) + ((float)Math.Cos(angle * (Math.PI / 180))*temp_y2) + config.y; //sinX + cosY +dy
 		//Debug.Log(k + " " +temp_x + " , " + temp_y);
 		//Vector2 v2= new Vector2(rotate_x, rotate_y);
+
+		if ((int)rotate_x2 > 127) //因為旋轉有可能超出範圍, 因此先判斷是否在1~127的範圍
+			rotate_x2 = 127.0F;
+		if ((int)rotate_x2 <= 0)
+			rotate_x2 = 1.0F;
+		if ((int)rotate_y2 > 127)
+			rotate_y2 = 127.0F;
+		if ((int)rotate_y2 <= 0)
+			rotate_y2 = 1.0F;
+
 		int potential_value2 = BuildPotential.bitmap2[(int)rotate_x2, (int)rotate_y2];
 
 		//control_p1.x = player.transform.FindChild("Control_Point1").transform.position.x;
@@ -429,15 +452,15 @@ public class BFS : MonoBehaviour {
 
             //===  加上旋轉  ===
             double angle = (double)plus_angle;
-            temp_x = robot_edges_point[i].x;
-            temp_y = robot_edges_point[i].y;
+			temp_x = robot_edges_point[i].x - x_init.x;
+			temp_y = robot_edges_point[i].y - x_init.y;
 
             float rotate_x = ((float)Math.Cos(angle * (Math.PI / 180.0)) * temp_x) - ((float)Math.Sin(angle * (Math.PI / 180)) * temp_y) + (float)plus_x; //cosX - sinY +dx
             float rotate_y = ((float)Math.Sin(angle * (Math.PI / 180.0)) * temp_x) + ((float)Math.Cos(angle * (Math.PI / 180)) * temp_y) + (float)plus_y; //sinX + cosY +dy
-            //Debug.Log(k + " " +temp_x + " , " + temp_y);
+			//Debug.Log(" " +rotate_x + " , " + rotate_y);
 
-            temp_x = rotate_x;
-            temp_y = rotate_y;
+			temp_x = rotate_x + x_init.x;
+			temp_y = rotate_y + x_init.y;
             //==================
 
             if (((int)temp_x < 129) && ((int)temp_x >= 0) && ((int)temp_y < 129) && ((int)temp_y >= 0)) //因為旋轉有可能超出範圍, 因此先判斷是否在0~128的範圍
@@ -466,15 +489,15 @@ public class BFS : MonoBehaviour {
 
                 //===  加上旋轉  ===
                 double angle = (double)plus_angle;
-                temp_x = robot_edges_point[i].x;
-                temp_y = robot_edges_point[i].y;
+				temp_x = robot_edges_point[i].x - x_init.x;
+				temp_y = robot_edges_point[i].y - x_init.y;
 
                 float rotate_x = ((float)Math.Cos(angle * (Math.PI / 180.0)) * temp_x) - ((float)Math.Sin(angle * (Math.PI / 180)) * temp_y) + (float)plus_x; //cosX - sinY +dx
                 float rotate_y = ((float)Math.Sin(angle * (Math.PI / 180.0)) * temp_x) + ((float)Math.Cos(angle * (Math.PI / 180)) * temp_y) + (float)plus_y; //sinX + cosY +dy
                 //Debug.Log(k + " " +temp_x + " , " + temp_y);
 
-                temp_x = rotate_x;
-                temp_y = rotate_y;
+				temp_x = rotate_x + x_init.x;
+				temp_y = rotate_y + x_init.y;
                 //==================
 
 				if (((int)temp_x < 129) && ((int)temp_x >= 0) && ((int)temp_y < 129) && ((int)temp_y >= 0)) //因為旋轉有可能超出範圍, 因此先判斷是否在0~128的範圍

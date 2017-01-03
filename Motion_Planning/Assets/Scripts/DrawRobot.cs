@@ -117,6 +117,7 @@ public class DrawRobot : MonoBehaviour {
             {
                 //====  畫initial_configuration  =========================
                 GameObject parentObj = new GameObject("Robot");
+				parentObj.tag = "Motion_Planning";
                 for (int j = 0; j < robots[i].n_of_polygons; j++)
                 {
                     vertices2D = robots[i].polygons[j].vertices.ToArray();
@@ -155,6 +156,7 @@ public class DrawRobot : MonoBehaviour {
 
                 //====  畫goal_configuration  =========================
                 GameObject parentObj2 = new GameObject("Robot");
+				parentObj2.tag = "Motion_Planning";
                 for (int j = 0; j < robots[i].n_of_polygons; j++)
                 {
                     vertices2D = robots[i].polygons[j].vertices.ToArray();
@@ -183,7 +185,7 @@ public class DrawRobot : MonoBehaviour {
             {
                 //====  畫initial_configuration  =========================
                 GameObject parentObj;
- 
+
                 vertices2D = robots[i].polygons[0].vertices.ToArray();
                 parentObj = Polygon.DrawPolygon(vertices2D);
                 //把polygon畫成藍色
@@ -216,6 +218,7 @@ public class DrawRobot : MonoBehaviour {
                 parentObj.transform.Translate(new Vector3(robots[i].init_configuration.x, robots[i].init_configuration.y, 0));
                 parentObj.transform.Rotate(new Vector3(0, 0, robots[i].init_configuration.z));
                 parentObj.name = "Robot";
+				parentObj.tag = "Motion_Planning";
 
                 //====  畫goal_configuration  =========================
                 GameObject parentObj2;
@@ -240,6 +243,7 @@ public class DrawRobot : MonoBehaviour {
                 parentObj2.transform.Translate(new Vector3(robots[i].goal_configuration.x, robots[i].goal_configuration.y, 0));
                 parentObj2.transform.Rotate(new Vector3(0, 0, robots[i].goal_configuration.z));
                 parentObj2.name = "Goal_of_Robot";
+				parentObj2.tag = "Motion_Planning";
             }
         }
 
