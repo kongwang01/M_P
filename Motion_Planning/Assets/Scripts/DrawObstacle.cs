@@ -122,8 +122,10 @@ public class DrawObstacle : MonoBehaviour {
         GameObject backGroundObj = Polygon.DrawPolygon(vertices2D_backGround);
 		backGroundObj.tag = "Motion_Planning";
         //把BackGround畫成白色
-		backGroundObj.GetComponent<Renderer>().material.color = new Color(0.3f, 0.3f, 0.3f, 0.0f);
-		backGroundObj.GetComponent<Renderer> ().material.shader = Shader.Find ("Unlit/Color");
+		//backGroundObj.GetComponent<Renderer>().material.color = new Color(0.3f, 0.3f, 0.3f, 0.0f);
+		//backGroundObj.GetComponent<Renderer> ().material.shader = Shader.Find ("Unlit/Color");
+		Material newMat = Resources.Load("Gray", typeof(Material)) as Material;
+		backGroundObj.GetComponent<Renderer> ().material = newMat;
         backGroundObj.name = "BackGround";
         backGroundObj.transform.Translate(0.0f, 0.0f, 1.0f);
 

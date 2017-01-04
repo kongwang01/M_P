@@ -96,6 +96,13 @@ public class main_GUI : MonoBehaviour {
         ProcessText.text = "DrawPotentialField -> BFS -> ShowPath";
     }
 
+	public void Angle_Changed(string str)
+	{
+		int temp_i = int.Parse (str);
+		if ((temp_i >= 1) && (temp_i <= 30))
+			User_angle_diff = (float)temp_i;
+	}
+
     public void SearchPath()
     {
         //GameObject scr = GameObject.Find("SrarchPath");

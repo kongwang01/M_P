@@ -123,8 +123,10 @@ public class DrawRobot : MonoBehaviour {
                     vertices2D = robots[i].polygons[j].vertices.ToArray();
                     GameObject childObj = Polygon.DrawPolygon(vertices2D);
                     //把polygon畫成藍色
-                    childObj.GetComponent<Renderer>().material.color = new Color(0.4f, 0.4f, 1.0f, 0.0f);
-					childObj.GetComponent<Renderer> ().material.shader = Shader.Find ("Unlit/Color");
+                    //childObj.GetComponent<Renderer>().material.color = new Color(0.4f, 0.4f, 1.0f, 0.0f);
+					//childObj.GetComponent<Renderer> ().material.shader = Shader.Find ("Blue");
+					Material newMat = Resources.Load("Blue", typeof(Material)) as Material;
+					childObj.GetComponent<Renderer> ().material = newMat;
                     childObj.transform.parent = parentObj.transform;
 
                     PolygonCollider2D collider = parentObj.AddComponent(typeof(PolygonCollider2D)) as PolygonCollider2D;
@@ -162,8 +164,10 @@ public class DrawRobot : MonoBehaviour {
                     vertices2D = robots[i].polygons[j].vertices.ToArray();
                     GameObject childObj = Polygon.DrawPolygon(vertices2D);
                     //把polygon畫成綠色
-                    childObj.GetComponent<Renderer>().material.color = new Color(0.4f, 1.0f, 0.4f, 0.0f);
-					childObj.GetComponent<Renderer> ().material.shader = Shader.Find ("Unlit/Color");
+                    //childObj.GetComponent<Renderer>().material.color = new Color(0.4f, 1.0f, 0.4f, 0.0f);
+					//childObj.GetComponent<Renderer> ().material.shader = Shader.Find ("Unlit/Color");
+					Material newMat = Resources.Load("Green", typeof(Material)) as Material;
+					childObj.GetComponent<Renderer> ().material = newMat;
                     childObj.transform.parent = parentObj2.transform;
 
                     PolygonCollider2D collider = parentObj2.AddComponent(typeof(PolygonCollider2D)) as PolygonCollider2D;
@@ -189,8 +193,10 @@ public class DrawRobot : MonoBehaviour {
                 vertices2D = robots[i].polygons[0].vertices.ToArray();
                 parentObj = Polygon.DrawPolygon(vertices2D);
                 //把polygon畫成藍色
-                parentObj.GetComponent<Renderer>().material.color = new Color(0.4f, 0.4f, 1.0f, 0.0f);
-				parentObj.GetComponent<Renderer> ().material.shader = Shader.Find ("Unlit/Color");
+                //parentObj.GetComponent<Renderer>().material.color = new Color(0.4f, 0.4f, 1.0f, 0.0f);
+				//parentObj.GetComponent<Renderer> ().material.shader = Shader.Find ("Unlit/Color");
+				Material newMat = Resources.Load("Blue", typeof(Material)) as Material;
+				parentObj.GetComponent<Renderer> ().material = newMat;
 
                 PolygonCollider2D collider = parentObj.AddComponent(typeof(PolygonCollider2D)) as PolygonCollider2D;
                 collider.points = vertices2D;
@@ -226,8 +232,10 @@ public class DrawRobot : MonoBehaviour {
                 vertices2D = robots[i].polygons[0].vertices.ToArray();
                 parentObj2 = Polygon.DrawPolygon(vertices2D);
 				//把polygon畫成綠色
-				parentObj2.GetComponent<Renderer>().material.color = new Color(0.4f, 1.0f, 0.4f, 0.0f);
-				parentObj2.GetComponent<Renderer> ().material.shader = Shader.Find ("Unlit/Color");
+				//parentObj2.GetComponent<Renderer>().material.color = new Color(0.4f, 1.0f, 0.4f, 0.0f);
+				//parentObj2.GetComponent<Renderer> ().material.shader = Shader.Find ("Unlit/Color");
+				newMat = Resources.Load("Green", typeof(Material)) as Material;
+				parentObj2.GetComponent<Renderer> ().material = newMat;
 
                 PolygonCollider2D collider2 = parentObj2.AddComponent(typeof(PolygonCollider2D)) as PolygonCollider2D;
                 collider2.points = vertices2D;

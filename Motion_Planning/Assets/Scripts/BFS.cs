@@ -18,11 +18,12 @@ public class BFS : MonoBehaviour {
     //Vector3 goal_config = DrawRobot.robots[0].goal_curr_configuration;
    // List<Vector3> OPEN_list = new List<Vector3>(); //用來儲存OPEN
 
+	private string messageToShow; //用來儲存秀到螢幕上的字串
 
 	// Use this for initialization
 	void Start () {
         //Application.targetFrameRate = 10; //設定每秒跑幾個frame? , 還要把Edit/Project Settings/Quarlity/V Sync Count改為Don't Sync
-
+		messageToShow = "";
         for (int i = 0; i < 129; i++)
             for (int j = 0; j < 129; j++)
                 for (int k = 0; k < 360; k++)
@@ -164,7 +165,7 @@ public class BFS : MonoBehaviour {
     {
         int count = 0;
 
-        Vector3[] control_p = new Vector3[2];
+        //Vector3[] control_p = new Vector3[2];
 
 		x_init = DrawRobot.robots[0].curr_configuration;
 		Vector3 goal_config = DrawRobot.robots[0].goal_curr_configuration;
@@ -320,15 +321,16 @@ public class BFS : MonoBehaviour {
                 break;
 
             count++;
-            if (count > 5000000) //防止無窮迴圈
+			messageToShow = count.ToString ();
+            if (count > 1000000) //防止無窮迴圈, 測超過100萬個CONFIGURATION就會跳出
                 break;
         }
-        Debug.Log(count);
+        //Debug.Log(count);
 
         if (success)
         {
-            Debug.Log("success!!!!!");
-            main_GUI.ProcessText.text = "Path Find!!";
+            //Debug.Log("success!!!!!");
+			main_GUI.ProcessText.text = "Find Path Success!!";
             finded_path = new List<Vector3>(); //用來儲存找到的path
 
             Vector3 tracing_path = goal_config;
@@ -368,8 +370,8 @@ public class BFS : MonoBehaviour {
 
 	int Arbitration_U(Vector3 config)
     {
-		Vector2 control_p1 = new Vector2 (0, 0);
-		Vector2 control_p2 = new Vector2 (0, 0);
+		//Vector2 control_p1 = new Vector2 (0, 0);
+		//Vector2 control_p2 = new Vector2 (0, 0);
 
 		double angle = config.z;
 		if (angle > 180.0)
@@ -530,4 +532,9 @@ public class BFS : MonoBehaviour {
             //BuildPotential.bitmap[(int)x, (int) y] = 255;
         }
     }
+
+	void OnGUI ()
+	{
+		GUILayout.Label( messageToShow );
+	}
 }
